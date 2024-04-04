@@ -4,6 +4,8 @@ class View():
 
     def __init__(self, root):
         self.root = root
+        self.color1 = "#7F00FF"
+        self.color2 = "#00FF00"
         self.createChessWindow()
 
     def createChessWindow(self):
@@ -17,6 +19,7 @@ class View():
         self.createHelpMenu()
         self.root['menu'] = self.menubar
         self.createCanvas()
+        self.drawChessboard()
         self.createGameInfo()
 
     def createFileMenu(self):
@@ -32,7 +35,7 @@ class View():
         self.menubar.add_cascade(menu=menuHelp, label='About')
 
     def createCanvas(self):
-        squareDimensions = 100 # in pixels
+        squareDimensions = 64 # in pixels
         numSquares = 8 # square's rows and cols
         canvasSize = squareDimensions * numSquares
         self.canvas = Canvas(self.root, width=canvasSize, height=canvasSize, background='gray75')
@@ -43,6 +46,33 @@ class View():
         self.infoLabel = Label(self.gameInfoFrame, text="      White to Start     ", fg='black')
         self.infoLabel.pack(side=RIGHT, padx=8, pady=5)
         self.gameInfoFrame.pack(fill="x", side="bottom")
+
+    def drawChessboard(self):
+        currentColor = self.color2
+        for row in range(8):
+            currentColor = self.getColor(currentColor)
+            for col in range(8):
+                x1 = self.getXCoordinate(col)
+                y1 = self.getYCoordinate(row)
+                x2 = x1 + 64
+                y2 = y1 + 64
+                self.canvas.create_rectangle(x1, y1, x2, y2, fill=currentColor)
+                currentColor = self.getColor(currentColor)
+
+    def getColor(self, currentColor):
+        if currentColor == self.color2:
+            nextColor = self.color1
+        else:
+            nextColor = self.color2
+        return nextColor
+
+
+    def getXCoordinate(self, col):
+        return (col * 64)
+
+    def getYCoordinate(self, row):
+        return (7 - row) * 64
+
 
 def main():
     root = Tk()
